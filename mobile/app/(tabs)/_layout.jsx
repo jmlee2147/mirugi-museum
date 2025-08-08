@@ -1,7 +1,7 @@
 import { Tabs } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { View, StyleSheet } from "react-native";
-import { BankIcon, ListIcon, BookBookmarkIcon, UserCircleIcon } from "phosphor-react-native";
+import { BankIcon, FileIcon, BookBookmarkIcon, UserCircleIcon } from "phosphor-react-native";
 
 const TabsLayout = () => {
   return (
@@ -34,28 +34,28 @@ const TabsLayout = () => {
           name="index"
           options={{
             title: "전시관",
-            tabBarIcon: ({ color, size }) => <BankIcon color={color} size={size} />,
+            tabBarIcon: ({ color, size }) => <BankIcon color={color} size={size} weight="fill" />,
           }}
         />
         <Tabs.Screen
           name="todoList"
           options={{
             tabBarLabel: "기록실",
-            tabBarIcon: ({ color, size }) => <ListIcon color={color} size={size} />,
+            tabBarIcon: ({ color, size }) => <FileIcon color={color} size={size} weight="fill"/>,
           }}
         />
         <Tabs.Screen
           name="history"
           options={{
             tabBarLabel: "도감",
-            tabBarIcon: ({ color, size }) => <BookBookmarkIcon color={color} size={size} />,
+            tabBarIcon: ({ color, size }) => <BookBookmarkIcon color={color} size={size} weight="fill" />,
           }}
         />
         <Tabs.Screen
           name="profile"
           options={{
             tabBarLabel: "프로필",
-            tabBarIcon: ({ color, size }) => <UserCircleIcon color={color} size={size} />,
+            tabBarIcon: ({ color, size }) => <UserCircleIcon color={color} size={size} weight="fill"/>,
           }}
         />
       </Tabs>
