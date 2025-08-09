@@ -2,17 +2,20 @@ import React from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import Modal from "react-native-modal";
 import { BlurView } from "expo-blur";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { height: windowHeight } = Dimensions.get("window");
 
 const BaseModal = ({ visible, onClose, title, children }) => {
+  const insets = useSafeAreaInsets();
+
   return (
     <Modal
       isVisible={visible}
       swipeDirection="down"
       onSwipeComplete={onClose}
       onBackdropPress={onClose}
-      style={styles.modal}
+      style={[styles.modal, { marginBottom: insets.bottom }]}
       backdropOpacity={0.7}
       animationIn="slideInUp"
       animationOut="slideOutDown"
@@ -22,7 +25,7 @@ const BaseModal = ({ visible, onClose, title, children }) => {
         tint="light"
         style={styles.blurContainer}
       >
-        <View style={styles.modalContainer}>
+        <View style={[styles.modalContainer, { paddingBottom: 30 + insets.bottom }]}>
           <View style={styles.header}>
             <Text style={styles.title}>{title}</Text>
           </View>
