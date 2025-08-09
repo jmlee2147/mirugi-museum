@@ -1,6 +1,6 @@
-import { Text, View, ImageBackground, Image, ActivityIndicator } from "react-native";
+import { Text, View, ImageBackground, Image, Animated, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Button from "../../assets/components/Button";
 import TaskInputModal from "../../assets/components/TaskInputModal";
 
@@ -13,6 +13,7 @@ const HomeScreen = () => {
   const [dots, setDots] = useState("");
 
   const [showTaskModal, setShowTaskModal] = useState(false);
+  const loadingOpacity = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     if (!loading) return;  // 로딩 중일 때만 실행
@@ -21,7 +22,6 @@ const HomeScreen = () => {
     }, 300);
     return () => clearInterval(interval);
   }, [loading]);
-
 
   useEffect(() => {
     async function fetchData() {
@@ -50,41 +50,21 @@ const HomeScreen = () => {
         setArtwork(null);
       } finally {
         setLoading(false);
-        setTimeout(() => {
-          setShowLoading(false);
-      }, 1500);
       }
     }
     fetchData();
   }, []);
 
-  if (showLoading) {
-    return (
-      <View style={{ flex: 1 }}>
-        <ImageBackground
-          source={require("../../assets/images/realbackground.png")}
-          resizeMode="cover"
-          style={{ flex: 1 }}
-        >
-          {/* 어둡게 덮는 레이어 */}
-          <View style={{ 
-            flex: 1, 
-            backgroundColor: "rgba(0,0,0,0.6)", 
-            justifyContent: "center", 
-            alignItems: "center" 
-          }}>
-            <Image
-              source={require("../../assets/images/loading.png")} // 중앙에 띄울 이미지
-              style={{ width: 62, height: 117, marginBottom: 20 }}
-            />
-            <Text className="text-white text-body1 font-koreanBold">
-              로딩 중 {dots}
-            </Text>
-          </View>
-        </ImageBackground>
-      </View>
-    );
-  }
+  // 로딩 종료 시 페이드 아웃 후 언마운트
+  useEffect(() => {
+    if (!loading && showLoading) {
+      Animated.timing(loadingOpacity, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+      }).start(() => setShowLoading(false));
+    }
+  }, [loading, showLoading, loadingOpacity]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -183,6 +163,35 @@ const HomeScreen = () => {
           }}
         />
       </ImageBackground>
+
+      {/* 로딩 오버레이 (페이드 아웃) */}
+      {showLoading && (
+        <Animated.View
+          style={[StyleSheet.absoluteFillObject, { opacity: loadingOpacity, zIndex: 10 }]}
+          pointerEvents={loading ? 'auto' : 'none'}
+        >
+          <ImageBackground
+            source={require("../../assets/images/realbackground.png")}
+            resizeMode="cover"
+            style={StyleSheet.absoluteFillObject}
+          >
+            <View style={{
+              flex: 1,
+              backgroundColor: "rgba(0,0,0,0.6)",
+              justifyContent: "center",
+              alignItems: "center"
+            }}>
+              <Image
+                source={require("../../assets/images/loading.png")}
+                style={{ width: 62, height: 117, marginBottom: 20 }}
+              />
+              <Text className="text-white text-body1 font-koreanBold">
+                로딩 중 {dots}
+              </Text>
+            </View>
+          </ImageBackground>
+        </Animated.View>
+      )}
     </View>
   );
 };
