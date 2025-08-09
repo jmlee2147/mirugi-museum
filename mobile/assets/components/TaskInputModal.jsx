@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, Button } from "react-native";
+import { View, TextInput, TouchableOpacity, Text } from "react-native";
 import BaseModal from "./BaseModal";
 
 const TaskInputModal = ({ visible, onClose, onSubmit }) => {
@@ -13,14 +13,23 @@ const TaskInputModal = ({ visible, onClose, onSubmit }) => {
 
   return (
     <BaseModal visible={visible} onClose={onClose} title="당신만의 작품을 남겨보세요.">
-      <View>
+      <View className="gap-4">
         <TextInput
           placeholder="당신만의 작품을 남겨보세요."
+          placeholderTextColor="#aaa"
           value={taskContent}
           onChangeText={setTaskContent}
-          style={{ borderWidth: 1, borderColor: "#ccc", padding: 8, borderRadius: 8 }}
+          className="p-3 text-white border border-gray-400 rounded-lg text-body2 font-koreanBold"
         />
-        <Button title="저장" onPress={handleSubmit} />
+        
+        <TouchableOpacity
+          onPress={handleSubmit}
+          className="py-3 bg-white rounded-lg"
+        >
+          <Text className="text-center text-black text-body2 font-koreanBold">
+            저장
+          </Text>
+        </TouchableOpacity>
       </View>
     </BaseModal>
   );

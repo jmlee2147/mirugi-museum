@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import * as Font from "expo-font";
 import { Slot } from "expo-router";
-import { SafeAreaView, View, ActivityIndicator, Platform } from "react-native";
+import { Animated, SafeAreaView, View, ActivityIndicator, Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Text, TextInput } from "react-native";
 import SafeScreen from "../assets/components/SafeScreen";

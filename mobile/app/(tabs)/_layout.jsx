@@ -25,7 +25,7 @@ const TabsLayout = () => {
           tabBarLabelStyle: {
             fontSize: 12,
             fontFamily: "Bookk-Myungjo",
-            letterSpacing: -0.1,
+            letterSpacing: -1,
             marginTop: 6,
           },
         }}
@@ -54,7 +54,7 @@ const TabsLayout = () => {
         <Tabs.Screen
           name="profile"
           options={{
-            tabBarLabel: "프로필",
+            tabBarLabel: "내 정보",
             tabBarIcon: ({ color, size }) => <UserCircleIcon color={color} size={size} weight="fill"/>,
           }}
         />
