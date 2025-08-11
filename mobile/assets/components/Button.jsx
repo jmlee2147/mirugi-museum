@@ -3,22 +3,25 @@ import { BlurView } from "expo-blur";
 import { PenNibIcon } from "phosphor-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
-export default function Button({ onPress, children }) {
+export default function Button({ onPress, children, style, fluid = false }) {
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
-      style={{
-        borderRadius: 999,
-        overflow: "hidden",
-        width: 234,
-        height: 44,
-        shadowColor: "#000",
-        shadowOpacity: 0.1,
-        shadowRadius: 15,
-        shadowOffset: { width: 0, height: 5 },
-        elevation: 5,
-      }}
+      style={[
+        {
+          borderRadius: 999,
+          overflow: "hidden",
+          width: fluid ? undefined : 234,
+          height: 44,
+          shadowColor: "#000",
+          shadowOpacity: 0.1,
+          shadowRadius: 15,
+          shadowOffset: { width: 0, height: 5 },
+          elevation: 5,
+        },
+        style,
+      ]}
     >
       {/* Gradient border (top -> bottom) */}
       <LinearGradient
