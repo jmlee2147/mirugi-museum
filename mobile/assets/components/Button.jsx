@@ -37,13 +37,8 @@ export default function Button({ onPress, children }) {
             style={StyleSheet.absoluteFillObject}
           />
 
-          {/* Subtle inner fill / sheen */}
-          <LinearGradient
-            colors={["rgba(214,214,214,0.3)", "rgba(255,255,255,0.1)"]}
-            start={[0, 0]}
-            end={[1, 1]}
-            style={{ flex: 1, borderRadius: 999 }}
-          >
+          {/* Solid inner fill */}
+          <View style={{ flex: 1, borderRadius: 999, backgroundColor: "rgba(214,214,214,0.3)" }}>
             <View
               style={{
                 flex: 1,
@@ -66,7 +61,7 @@ export default function Button({ onPress, children }) {
                 {children}
               </Text>
             </View>
-          </LinearGradient>
+          </View>
         </View>
       </LinearGradient>
     </TouchableOpacity>
