@@ -4,6 +4,13 @@ import { useState, useEffect, useRef } from "react";
 import Button from "../../assets/components/Button";
 import TaskInputModal from "../../assets/components/TaskInputModal";
 
+const getTestArtworkByTaskContent = (taskContent) => {
+  if (typeof taskContent !== "string") return null;
+  return taskContent.includes("개발")
+    ? { imageUrl: "https://example.com/coding_artwork.png" }
+    : null;
+};
+
 const HomeScreen = () => {
   const [loading, setLoading] = useState(true);
   const [showLoading, setShowLoading] = useState(true);
@@ -38,7 +45,8 @@ const HomeScreen = () => {
 
           if (artworksData.success && artworksData.data.length > 0) {
             const matchedArtwork = artworksData.data.find(a => a.taskId === tasksData.data[0].id);
-            setArtwork(matchedArtwork || null);
+            const fallback = getTestArtworkByTaskContent(tasksData.data[0]?.content || "");
+            setArtwork(matchedArtwork || fallback || null);
           }
         } else {
           setTask(null);
@@ -159,6 +167,8 @@ const HomeScreen = () => {
           onSubmit={(newTask) => {
             // 새 할 일 저장 처리 로직 넣기
             console.log("새 할 일:", newTask);
+            setTask({ content: newTask, dueDate: new Date() });
+            setArtwork(getTestArtworkByTaskContent(newTask));
             setShowTaskModal(false);
           }}
         />
