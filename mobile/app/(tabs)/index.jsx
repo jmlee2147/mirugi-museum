@@ -1,8 +1,16 @@
 import { Text, View, ImageBackground, Image, Animated, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState, useEffect, useRef } from "react";
+import { PenNibIcon } from "phosphor-react-native";
 import Button from "../../assets/components/Button";
 import TaskInputModal from "../../assets/components/TaskInputModal";
+
+const getTestArtWorkByTaskContent = (taskContent) => {
+  if (typeof taskContent !== "string") return null;
+  return taskContent.includes("개발")
+    ? { imageUrl: require("../../assets/images/test.png")}
+    : null;
+};
 
 const HomeScreen = () => {
   const [loading, setLoading] = useState(true);
@@ -14,6 +22,58 @@ const HomeScreen = () => {
 
   const [showTaskModal, setShowTaskModal] = useState(false);
   const loadingOpacity = useRef(new Animated.Value(1)).current;
+
+  const styles = StyleSheet.create({
+    title: {
+      color: "#fff",
+      fontFamily: "Bookk-Myungjo-Bold", 
+      fontSize: 16,
+      letterSpacing: -1.6,
+      marginBottom: 4,
+      
+    },
+    label: {
+      color: "#ccc",
+      fontFamily: "Bookk-Myungjo",
+      fontSize: 12,
+      letterSpacing: -1,
+      marginBottom: 12,
+      
+    },
+    content: {
+      color: "#FFF",
+      fontFamily: "Bookk-Myungjo",
+      fontSize: 14,
+      letterSpacing: -1.4,
+      marginBottom: 12,
+    },
+    description: {
+      color: "#FFF",
+      fontFamily: "Bookk-Myungjo",
+      fontSize: 14,
+      letterSpacing: -1.4,
+      marginBottom: 12,
+    },
+    placeholderText: {
+      color: "#fff",
+      fontFamily: "Bookk-Myungjo-Bold", 
+      fontSize: 16,
+      letterSpacing: -1.6,
+      marginBottom: 4,
+    },
+    placeholderContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      borderBottomWidth: 1,
+      borderBottomColor: "#fff",
+      paddingBottom: 4,
+      marginBottom: 8,
+    },
+
+    placeholderIcon: {
+      marginRight: 4,
+    }
+  });
 
   useEffect(() => {
     if (!loading) return;  // 로딩 중일 때만 실행
@@ -39,7 +99,8 @@ const HomeScreen = () => {
 
           if (artworksData.success && artworksData.data.length > 0) {
             const matchedArtwork = artworksData.data.find(a => a.taskId === tasksData.data[0].id);
-            setArtwork(matchedArtwork || null);
+            const fallback = getTestArtWorkByTaskContent(tasksData.data[0]?.content || "")
+            setArtwork(matchedArtwork || fallback || null);
           }
         } else {
           setTask(null);
@@ -86,7 +147,13 @@ const HomeScreen = () => {
         />
 
         <Image
-          source={artwork?.imageUrl ? { uri: artwork.imageUrl } : defaultArtwork}
+          source={
+            artwork?.imageUrl 
+              ? typeof artwork.imageUrl === "string"
+                ? { uri: artwork.imageUrl }
+                : artwork.imageUrl
+              : defaultArtwork
+          }
           style={{
             position: 'absolute',
             top: 140,
@@ -116,33 +183,42 @@ const HomeScreen = () => {
         <View
           style={{
             position: "absolute",
-            top: 410,
+            top: 400,
             left: 0,
             right: 0,
             paddingHorizontal: 24,
-            alignItems: "center",
-            // 작품 설명과 버튼 간 간격 위해 paddingBottom 제거
-            // paddingBottom: 212, // 제거
+            alignItems: "center", 
           }}
         >
-          <Text className="mb-4 text-white text-body2 font-koreanBold">
-            {task ? (artwork?.title || "제목 없음") : "《 미루기 미술관에 오신 것을 환영합니다 》"}
-          </Text>
+          {task ? (
+            artwork?.title ? (
+              <Text style={styles.title}>{artwork.title}</Text>
+            ) : (
+              <View style={styles.placeholderContainer}>
+                <PenNibIcon size={16} color="#fff" weight="fill" style={styles.placeholderIcon} />
+                <Text style={styles.placeholderText}>이 작품의 이름을 지어주세요 .</Text>
+              </View>
+            )
+          ) : (
+            <Text style={styles.title}>《 미루기 미술관에 오신 것을 환영합니다 》</Text>
+          )}
 
           {task ? (
-            <>
-              <Text style={{ color: "#ccc", fontSize: 14, marginBottom: 2 }}>
-                목표 기한: {new Date(task.dueDate).toLocaleDateString()}
-              </Text>
-              <Text style={{ color: "#ccc", fontSize: 16, fontWeight: "600", marginBottom: 4 }}>
-                {task.content}
-              </Text>
-              <Text style={{ color: "#ddd", fontSize: 14, fontStyle: "italic" }}>
-                {artwork?.description || "설명 없음"}
-              </Text>
-            </>
+            artwork?.title ? (
+              <>
+                <Text style={styles.label}>
+                  목표 완료일: {new Date(task.dueDate).toLocaleDateString()}
+                </Text>
+                <Text style={styles.content}>
+                  {task.content}
+                </Text>
+                <Text style={styles.description}>
+                  {artwork?.description || "설명 없음"}
+                </Text>
+              </>
+            ) : null
           ) : (
-            <Text className="text-white text-body3 font-koreanRegular">
+            <Text style={styles.placeholderText}>
               게으름 속에 피어난 예술
             </Text>
           )}
@@ -160,6 +236,8 @@ const HomeScreen = () => {
           onSubmit={(newTask) => {
             // 새 할 일 저장 처리 로직 넣기
             console.log("새 할 일:", newTask);
+            setTask({ content: newTask, dueDate: new Date().toISOString() });
+            setArtwork(getTestArtWorkByTaskContent(newTask));
             setShowTaskModal(false);
           }}
         />
@@ -195,8 +273,6 @@ const HomeScreen = () => {
       )}
     </View>
   );
-};
-
-  
+};  
 
 export default HomeScreen;

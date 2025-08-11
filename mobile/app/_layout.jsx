@@ -39,8 +39,11 @@ export default function RootLayout() {
   }
 
   return (
-    <SafeScreen>
-      <Slot />
-    </SafeScreen>
+    <>
+      <StatusBar style="light" />
+      <SafeScreen>
+        <Slot />
+      </SafeScreen>
+    </>
   );
 }
