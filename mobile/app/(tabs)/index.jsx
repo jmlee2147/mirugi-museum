@@ -38,15 +38,25 @@ const HomeScreen = () => {
         const tasksData = await tasksRes.json();
 
         if (tasksData.success && tasksData.data.length > 0) {
-          setTask(tasksData.data[0]);
+          const firstTask = tasksData.data[0];
+          setTask(firstTask);
 
-          const artworksRes = await fetch(`https://mirugi-museum.onrender.com/api/artworks/${userId}`);
-          const artworksData = await artworksRes.json();
+          // Prefill with test fallback based on task content
+          const fallback = getTestArtworkByTaskContent(firstTask?.content || "");
+          setArtwork(fallback);
 
-          if (artworksData.success && artworksData.data.length > 0) {
-            const matchedArtwork = artworksData.data.find(a => a.taskId === tasksData.data[0].id);
-            const fallback = getTestArtworkByTaskContent(tasksData.data[0]?.content || "");
-            setArtwork(matchedArtwork || fallback || null);
+          // Try to fetch actual artworks and override if a match exists
+          try {
+            const artworksRes = await fetch(`https://mirugi-museum.onrender.com/api/artworks/${userId}`);
+            const artworksData = await artworksRes.json();
+            if (artworksData.success && artworksData.data.length > 0) {
+              const matchedArtwork = artworksData.data.find(a => a.taskId === firstTask.id);
+              if (matchedArtwork) {
+                setArtwork(matchedArtwork);
+              }
+            }
+          } catch (e) {
+            // Ignore and keep fallback
           }
         } else {
           setTask(null);
