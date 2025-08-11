@@ -12,13 +12,6 @@ const TaskInputModal = ({ visible, onClose, onSubmit }) => {
   const [dueDate, setDueDate] = useState(null);
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
 
-  const handleSubmit = () => {
-    onSubmit(taskContent);
-    setTaskContent("");
-    setDueDate(null);
-    onClose();
-  };
-
   const showDatePicker = () => {
     setDatePickerVisible(true);
   };
@@ -30,6 +23,46 @@ const TaskInputModal = ({ visible, onClose, onSubmit }) => {
   const handleConfirm = (date) => {
     setDueDate(date);
     hideDatePicker();
+  };
+
+  const handleSubmit = async () => {
+    if (!taskContent || taskContent.trim() === "") {
+      alert("할 일을 입력해 주세요.");
+      return;
+    }
+    if (!dueDate) {
+      alert("완료 날짜를 선택해 주세요.");
+      return;
+    }
+    
+    try {
+      console.log("서버에 저장 요청 보냄:", taskContent, dueDate);
+      const response = await fetch("https://mirugi-museum.onrender.com/api/tasks", {
+        method: 'POST',
+        headers: { "Content-Type" : 'application/json' },
+        body: JSON.stringify({
+          userId: "clrk_123",  // 테스트용 하드코딩 사용자 ID
+          content: taskContent,
+          dueDate: dueDate.toISOString(),
+          status: "pending",
+        }),
+      });
+      
+      console.log("서버 응답 상태:", response.status);
+      if(!response.ok) {
+        throw new Error("Failed to save task");
+      }
+  
+      const data = await response.json();
+      console.log("서버 응답 데이터:", data); 
+      alert('할 일이 저장되었습니다.');
+      setTaskContent("");
+      setDueDate(null); 
+      onSubmit(data.data); // 부모 컴포넌트에 알림
+    
+    }  catch (error) {
+      alert('할 일을 저장하는 데 실패했습니다.');
+    }
   };
 
   return (
