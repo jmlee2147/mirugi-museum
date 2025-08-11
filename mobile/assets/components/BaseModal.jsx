@@ -29,7 +29,7 @@ const BaseModal = ({ visible, onClose, title, children }) => {
             <View style={styles.header}>
               <TWText 
                 className="text-white font-koreanBold"
-                style={{ fontSize: 20, letterSpacing: -2.4 }}>
+                style={{ fontSize: 20, letterSpacing: -2.0 }}>
                 {title}
               </TWText>
             </View>
