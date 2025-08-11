@@ -3,7 +3,7 @@ import { BlurView } from "expo-blur";
 import { PenNibIcon } from "phosphor-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
-export default function Button({ onPress, children, style, fluid = false }) {
+export default function Button({ onPress, children, style, fluid = false, showIcon = true, innerColor = "rgba(214,214,214,0.3)" }) {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -41,7 +41,7 @@ export default function Button({ onPress, children, style, fluid = false }) {
           />
 
           {/* Solid inner fill */}
-          <View style={{ flex: 1, borderRadius: 999, backgroundColor: "rgba(214,214,214,0.3)" }}>
+          <View style={{ flex: 1, borderRadius: 999, backgroundColor: innerColor }}>
             <View
               style={{
                 flex: 1,
@@ -52,7 +52,7 @@ export default function Button({ onPress, children, style, fluid = false }) {
                 gap: 6,
               }}
             >
-              <PenNibIcon size={16} weight="fill" color="white" />
+              {showIcon && <PenNibIcon size={16} weight="fill" color="white" />}
               <Text
                 style={{
                   color: "white",

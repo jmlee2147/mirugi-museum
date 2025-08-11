@@ -85,6 +85,8 @@ const TaskInputModal = ({ visible, onClose, onSubmit }) => {
           <View style={{ flexDirection: "row", gap: 12, paddingHorizontal: 4 }}>
             <Button
               fluid
+              showIcon={false}
+              innerColor="rgba(0, 128, 255, 0.3)"
               style={{ flex: 1 }}
               onPress={handleSubmit}
             >
@@ -92,6 +94,8 @@ const TaskInputModal = ({ visible, onClose, onSubmit }) => {
             </Button>
             <Button
               fluid
+              showIcon={false}
+              innerColor="rgba(214,214,214,0.3)"
               style={{ flex: 1 }}
               onPress={onClose}
             >
